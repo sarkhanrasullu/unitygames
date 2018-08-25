@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Audio;
 
 public class Character : MonoBehaviour {
 	public float hiz, maxHiz, ziplamaGucu;
@@ -14,6 +16,10 @@ public class Character : MonoBehaviour {
 	public int can, maxCan;
 
 	public GameObject[] canlar;
+	public Text altinMiktar, havucMiktar;
+	public int altinMiktarInt, havucMiktarInt;
+	 
+	public AudioClip[] audioClips;
 
 	// Use this for initialization
 	void Start () {
@@ -34,6 +40,10 @@ public class Character : MonoBehaviour {
 				agirlik.AddForce (Vector2.up * ziplamaGucu);
 				ciftZipla = false;
 			}
+		}
+
+		if (Input.GetKeyDown (KeyCode.R)) {
+			olme ();
 		}
 
 		if (can <= 0) {
@@ -87,4 +97,51 @@ public class Character : MonoBehaviour {
 			canlar [i].SetActive (true);
 		}
 	}
+
+	public string tag;
+	public GameObject colliderObject;
+
+	void OnCollisionEnter2D(Collision2D nesne){
+		tag = nesne.gameObject.tag;
+		if (nesne.gameObject.tag == "tuzakTag") {
+			PlaySound (2);
+			can -= 1;
+			agirlik.AddForce (Vector2.up * ziplamaGucu);
+			GetComponent<SpriteRenderer> ().color = Color.red;
+			Invoke ("Duzelt", 0.5f);
+			canSistemi ();
+		} 
+	}
+
+
+	void OnTriggerEnter2D(Collider2D nesne){
+		if (nesne.gameObject.tag == "havucTag") {
+			PlaySound (0);
+
+			havucMiktarInt++;
+			havucMiktar.text = havucMiktarInt + "";
+
+			Destroy (nesne.gameObject);
+		}
+
+		if (nesne.gameObject.tag == "coinTag") {
+			PlaySound (1);
+			
+			altinMiktarInt++;
+			altinMiktar.text = altinMiktarInt + "";
+
+			Destroy (nesne.gameObject);
+		}
+	}
+
+	void PlaySound(int index){
+		AudioSource ass = GetComponent<AudioSource> ();
+		ass.PlayOneShot (audioClips [index]);
+	}
+
+
+	void Duzelt(){
+		GetComponent<SpriteRenderer> ().color = Color.white;
+	}
+
 }
