@@ -20,9 +20,10 @@ public class Character : MonoBehaviour {
 	public int altinMiktarInt, havucMiktarInt;
 	 
 	public AudioClip[] audioClips;
-
+	public Character cr;
 	// Use this for initialization
 	void Start () {
+		cr = GetComponent<Character> ();
 		agirlik = GetComponent<Rigidbody2D> ();
 		anim = GetComponent<Animator> ();
 		can = maxCan;
@@ -54,33 +55,20 @@ public class Character : MonoBehaviour {
 	}
 
 	void FixedUpdate(){
-		velocity = agirlik.velocity;
-	    h = Input.GetAxis("Horizontal");
-		agirlik.AddForce(Vector2.right * h * hiz);
+				velocity = agirlik.velocity;
+			    h = Input.GetAxis("Horizontal");
+				agirlik.AddForce(Vector2.right * h * hiz);
 
-		anim.SetFloat ("Hiz", Mathf.Abs(h));
-		anim.SetBool ("Yerdemi", yerdemi);
+				anim.SetFloat ("Hiz", Mathf.Abs(h));
+				anim.SetBool ("Yerdemi", yerdemi);
 
-		if(h > 0.1f) {
-			transform.localScale = new Vector2 (1, 1);
-		} 
+				if(h > 0.1f) {
+					transform.localScale = new Vector2 (1, 1);
+				} 
 
-		if (h < -0.1f) {
-			transform.localScale = new Vector2 (-1, 1);
-		} 
-
-//		if(h==0){
-//			agirlik.velocity = new Vector2 (0, 0);
-//			return;
-//		} 
-			
-		if (agirlik.velocity.x > maxHiz) {
-			agirlik.velocity = new Vector2(maxHiz, agirlik.velocity.y);
-		} 
-
-		if (agirlik.velocity.x < -maxHiz) {
-			agirlik.velocity = new Vector2(-maxHiz, agirlik.velocity.y);
-		} 
+				if (h < -0.1f) {
+					transform.localScale = new Vector2 (-1, 1);
+				} 
 	}
 
 	void olme(){
@@ -102,6 +90,7 @@ public class Character : MonoBehaviour {
 	public GameObject colliderObject;
 
 	void OnCollisionEnter2D(Collision2D nesne){
+		cr.yerdemi = true;
 		tag = nesne.gameObject.tag;
 		if (nesne.gameObject.tag == "tuzakTag") {
 			PlaySound (2);
@@ -113,8 +102,13 @@ public class Character : MonoBehaviour {
 		} 
 	}
 
+	void OnCollisionExit2D(Collision2D nesne){
+		cr.yerdemi = false;
+	}
 
 	void OnTriggerEnter2D(Collider2D nesne){
+		cr.yerdemi = true;
+
 		if (nesne.gameObject.tag == "havucTag") {
 			PlaySound (0);
 
@@ -143,5 +137,5 @@ public class Character : MonoBehaviour {
 	void Duzelt(){
 		GetComponent<SpriteRenderer> ().color = Color.white;
 	}
-
+ 
 }
