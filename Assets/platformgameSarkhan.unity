@@ -399,14 +399,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa1bb29432c604a9b8961f93cc1e1ab2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hiz: 10
-  maxHiz: 5
+  hiz: 5
   ziplamaGucu: 200
   yerdemi: 1
   ciftZipla: 0
-  velocity: {x: 0, y: 0}
-  inc: {x: 0, y: 0}
-  up: {x: 0, y: 200}
   h: 0
   agirlik: {fileID: 759093370}
   can: 5
@@ -514,7 +510,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 759093365}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.77, y: 7.65, z: 0}
+  m_LocalPosition: {x: 0.77, y: 7.65, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
