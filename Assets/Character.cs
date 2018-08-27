@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Audio;
 
 public class Character : MonoBehaviour {
+	
 	public float hiz, maxHiz, ziplamaGucu;
 	public bool yerdemi, ciftZipla;
 	public Vector2 velocity;
@@ -14,15 +15,16 @@ public class Character : MonoBehaviour {
 	public Rigidbody2D agirlik;
 	Animator anim;
 	public int can, maxCan;
-
 	public GameObject[] canlar;
 	public Text altinMiktar, havucMiktar;
 	public int altinMiktarInt, havucMiktarInt;
-	 
 	public AudioClip[] audioClips;
 	public Character cr;
+	private bool stopped;
+
 	// Use this for initialization
 	void Start () {
+		stopped = true;
 		cr = GetComponent<Character> ();
 		agirlik = GetComponent<Rigidbody2D> ();
 		anim = GetComponent<Animator> ();
@@ -57,8 +59,13 @@ public class Character : MonoBehaviour {
 	void FixedUpdate(){
 				velocity = agirlik.velocity;
 			    h = Input.GetAxis("Horizontal");
-				agirlik.AddForce(Vector2.right * h * hiz);
-
+				if (h != 0) {
+					stopped = false;
+					agirlik.AddForce (Vector2.right * h * hiz);
+				}else if(!stopped){
+					stopped = true;
+					agirlik.velocity = new Vector3 (0, 0, 0);
+				}
 				anim.SetFloat ("Hiz", Mathf.Abs(h));
 				anim.SetBool ("Yerdemi", yerdemi);
 
@@ -86,12 +93,8 @@ public class Character : MonoBehaviour {
 		}
 	}
 
-	public string tag;
-	public GameObject colliderObject;
-
 	void OnCollisionEnter2D(Collision2D nesne){
 		cr.yerdemi = true;
-		tag = nesne.gameObject.tag;
 		if (nesne.gameObject.tag == "tuzakTag") {
 			PlaySound (2);
 			can -= 1;
@@ -107,8 +110,6 @@ public class Character : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D nesne){
-		cr.yerdemi = true;
-
 		if (nesne.gameObject.tag == "havucTag") {
 			PlaySound (0);
 
