@@ -7,12 +7,12 @@ public class SceneMaker : MonoBehaviour {
 	public List<GameObject> places;
 	public GameObject startPlace;
 	public GameObject finishPlace;
-	public GameObject character;
+    public GameObject character;
+    public GameObject background;
 
 
-
-	// Use this for initialization
-	void Start () {
+        // Use this for initialization
+    void Start () {
 		startX = 0;
 		startY = 0;
 		Genereate ();
@@ -22,6 +22,10 @@ public class SceneMaker : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    void GenerateBackground(){
+
+    }
 
 	void Genereate(){
 		Debug.Log ("generate");
@@ -58,14 +62,18 @@ public class SceneMaker : MonoBehaviour {
 			Debug.Log ("last place width=" + lastPlaceWidth);
 		}
 
-		obj.transform.rotation = transform.rotation;
-		obj.transform.position = new Vector3 (startX, startY, 0);
-		Instantiate (obj);
+        InstantiateObj(obj,startX, startY);
 
 		lastPlace = obj;
 		Debug.Log ("startX=" + startX);
 		Debug.Log ("obj.transform.position=" + obj.transform.position);
 	}
+
+    public void InstantiateObj(GameObject obj, int startX, int startY){
+        obj.transform.rotation = transform.rotation;
+        obj.transform.position = new Vector3(startX, startY, 0);
+        Instantiate(obj);
+    }
  
 	public static float Get_Width(GameObject gameObject)
 	{
