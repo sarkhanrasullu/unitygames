@@ -13,7 +13,7 @@ public class Character : MonoBehaviour {
 	Animator anim;
 	public int can, maxCan;
 	public GameObject[] canlar;
-	public Text altinMiktar, havucMiktar;
+	public Text altinMiktar, havucMiktar, txtStatus;
 	public int altinMiktarInt, havucMiktarInt;
 	public AudioClip[] audioClips;
 	public Character cr;
@@ -27,10 +27,15 @@ public class Character : MonoBehaviour {
 		anim = GetComponent<Animator> ();
 		can = maxCan;
 		canSistemi ();
+
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    private void Awake()
+    {
+        levelStart();
+    }
+    // Update is called once per frame
+    void Update () {
 		if (Input.GetKeyDown (KeyCode.Space)) {
 			if (yerdemi) {
 				agirlik.AddForce (Vector2.up * ziplamaGucu);
@@ -53,22 +58,7 @@ public class Character : MonoBehaviour {
 	}
 
 	void FixedUpdate(){
-			    h = Input.GetAxis("Horizontal");
-//				if (h != 0) {
-//					stopped = false;
-//					agirlik.AddForce (Vector2.right * h * hiz);
-//				}else if(!stopped){
-//					stopped = true;
-//					agirlik.velocity = new Vector3 (0, 0, 0);
-//				}
-//
-//				if(h > 0.1f) {
-//					transform.localScale = new Vector2 (1, 1);
-//				} 
-//
-//				if (h < -0.1f) {
-//					transform.localScale = new Vector2 (-1, 1);
-//				} 
+		h = Input.GetAxis("Horizontal");
 
 		if (h > 0) {
 			transform.localScale = new Vector2 (1, 1);
@@ -84,6 +74,7 @@ public class Character : MonoBehaviour {
 		anim.SetFloat ("Hiz", Mathf.Abs(h));
 		anim.SetBool ("Yerdemi", yerdemi);
 	}
+
 
 	void olme(){
 		Application.LoadLevel (Application.loadedLevel);
@@ -126,7 +117,12 @@ public class Character : MonoBehaviour {
 			Destroy (nesne.gameObject);
 		}
 
-		if (nesne.gameObject.tag == "coinTag") {
+        if (nesne.gameObject.tag == "carrotFinish")
+        {
+            levelUp();
+        }
+
+        if (nesne.gameObject.tag == "coinTag") {
 			PlaySound (1);
 			
 			altinMiktarInt++;
@@ -145,5 +141,25 @@ public class Character : MonoBehaviour {
 	void Duzelt(){
 		GetComponent<SpriteRenderer> ().color = Color.white;
 	}
- 
+
+    void levelUp(){
+        PlaySound(0);
+        int i = PlayerPrefs.GetInt("level");
+        PlayerPrefs.SetInt("level", ++i);
+        txtStatus.text = "You passed level " + i;
+        Invoke("olme", 1.5f);
+    }
+
+    void levelStart()
+    {
+        int i = PlayerPrefs.GetInt("level");
+        i++;
+        txtStatus.text = "Level " + i;
+        Invoke("textHide", 1.5f);
+    }
+
+    void textHide(){
+        txtStatus.text = "";
+
+    }
 }
